@@ -59,6 +59,7 @@ function Console:display()
             -- which may persist between awesome restarts. We don't close
             -- them as they may be valuable. They will just turn into a
             -- classic terminal.
+            c.opacity = 1
             c.sticky = false
             c.ontop = false
             c.above = false
@@ -108,6 +109,7 @@ function Console:display()
     client:geometry({ x = x, y = y, width = width, height = height })
 
     -- Sticky and on top
+    client.opacity = 0.85
     client.ontop = true
     client.above = true
     client.skip_taskbar = true
