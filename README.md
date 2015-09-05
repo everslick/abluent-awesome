@@ -38,3 +38,6 @@ ToDo
 * test more then one screen (xrandr)
 * nicer icons
 * useful functions for fn-keys
+
+![Screenshot 1](./doc/screenshot_1.png?raw=true "Screenshot 1")
+![Screenshot 2](./doc/screenshot_2.png?raw=true "Screenshot 2")
