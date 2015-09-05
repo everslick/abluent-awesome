@@ -50,9 +50,10 @@ end
 -- BASIC SETUP AND INTITIALIZATION STUFF                                     --
 -------------------------------------------------------------------------------
 
-config_dir = awful.util.getdir("config") .. "/"
-cache_dir = awful.util.getdir("cache") .. "/"
-theme_dir = config_dir .. "theme/"
+local config_dir = awful.util.getdir("config") .. "/"
+local cache_dir  = awful.util.getdir("cache")  .. "/"
+local theme_dir  = config_dir .. "theme"       .. "/"
+local home_dir   = os.getenv("HOME")           .. "/"
 
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(theme_dir .. "theme.lua")
@@ -165,23 +166,13 @@ local function run_once(prg)
     end
 end
 
-local function view_keyboard_help()
-    naughty.notify({
-        preset = naughty.config.presets.low,
-        text = keyhelp_create_markup(),
-        font = "DejaVu Sans Mono 8",
-        timeout = 60
-    })
-end
-
 local function lock_screen()
     awful.util.spawn(screenlock_cmd, false)
 end
 
 local function grab_screen(window)
-    local path = os.getenv("HOME")
     local timestamp = os.date("%Y-%m-%d_%H:%M:%S", os.time())
-    local filename = path .. "/screenshot_" .. timestamp .. ".png"
+    local filename = home_dir .. "/screenshot_" .. timestamp .. ".png"
     local args = " "
 
     if window then args = " -ub " end
@@ -236,6 +227,9 @@ import("xrandr")
 import("keyhelp")
 import("debug")
 import("conky")
+
+awful.util.spawn("ln -sf " .. config_dir .. "conkyrc " ..
+                              home_dir .. ".conkyrc", false)
 
 for s = 1, screen.count() do
     console[s] = console()
@@ -650,8 +644,6 @@ local globalkeys = awful.util.table.join(
     end),
 
     awful.key({ }, "XF86Display",              xrandr             ),
-    awful.key({ }, "XF86Battery",              conky_toggle       ),
-    awful.key({ }, "XF86Help",                 view_keyboard_help ),
 
     awful.key({ }, "XF86AudioRaiseVolume",     vol_widget_up      ),
     awful.key({ }, "XF86AudioLowerVolume",     vol_widget_down    ),
@@ -689,7 +681,6 @@ local globalkeys = awful.util.table.join(
 
     -- Single handed
     awful.key({ winkey            }, "Escape", awful.tag.history.restore ),
-    awful.key({ winkey            }, "v",      view_keyboard_help        ),
 
     awful.key({                   }, "Print",  grab_screen               ),
     awful.key({ winkey            }, "Print",  function()
@@ -710,6 +701,11 @@ local globalkeys = awful.util.table.join(
     awful.key({ winkey            }, "a",      function()
         awful.util.spawn(terminal .. " -name Float")
     end),
+
+    awful.key({ winkey            }, "F1",     keyhelp_toggle ),
+    awful.key({ altkey            }, "F1",     keyhelp_toggle ),
+    awful.key({ winkey            }, "F2",     conky_toggle   ),
+    awful.key({ altkey            }, "F2",     conky_toggle   ),
     awful.key({ altkey            }, "Escape", function()
         console[mouse.screen]:toggle()
     end),

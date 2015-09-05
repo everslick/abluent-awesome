@@ -1,3 +1,5 @@
+local naughty = require("naughty")
+
 local help = {
 --    TYPE    MOD1    MOD2           KEY        TEXT
 -------------------------------------------------------------------------------
@@ -16,7 +18,7 @@ local help = {
     { "key" , "Win" , "Ctrl"       , "r|q"   , "restart/quit awesome"        },
     { "key" , "Win" , "Ctrl"       , "l"     , "lock screen"                 },
     { "key" , "Win" , ""           , "c"     , "toggle awesome panel"        },
-    { "key" , "Win" , ""           , "v"     , "view keyboard help"          },
+    { "key" , "Win" , ""           , "F1"    , "view keyboard help"          },
     { "key" , "Win" , ""           , "Esc"   , "restore tag history"         },
     { "key" , "Win" , ""           , "Tab"   , "focus next client"           },
     { "key" , "Win" , ""           , "PrtSc" , "grab window"                 },
@@ -53,7 +55,9 @@ local help = {
 -------------------------------------------------------------------------------
 }
 
-function keyhelp_create_markup()
+local notification = nil
+
+local function create_markup()
     local padding = 10
     local longest = 0
     local result = ""
@@ -119,4 +123,23 @@ function keyhelp_create_markup()
     end
 
     return result
+end
+
+function keyhelp_toggle()
+    local function close()
+        naughty.destroy(notification)
+        notification = nil
+    end
+
+    if notification then
+        close()
+    else
+        notification = naughty.notify({
+            preset = naughty.config.presets.low,
+            text = create_markup(),
+            font = "DejaVu Sans Mono 8",
+            timeout = 0,
+            run = close
+        })
+    end
 end
