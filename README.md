@@ -1,18 +1,18 @@
-Abluent (Awesome)
------------------
+# Abluent (Awesome)
 
 This is an [awesome](http://awesome.naquadah.org) configuration
 and theme, that strives for modularity as well as cleanness.
-.
+
 It is heavily based on [Vincent Bernat's awesome configuration]
 (http://https://github.com/vincentbernat/awesome-configuration),
 but has some bits removed and others added. The keybindings
-are very different from Bernat's and from the default bindings.
+are also very different from the default bindings.
 
 This configuration was tested with _awesome_ 3.5.6
 
 Features
 --------
+
 * optimized for netbooks and low screen resolution
 * low # of external depedencies
 * fast volume and backlight control via scrollwheel and keyboard
@@ -27,6 +27,7 @@ Features
 
 Dependencies
 ------------
+
 * awesome (3.5.x)
 * lain (awesome widget library)
 * aumix (for GUI mixer)

@@ -1,5 +1,23 @@
 local naughty = require("naughty")
 
+--[[
+    Fn + F2   Shows the remaining battery charge.
+    Fn + F3   Types the euro.
+    Fn + F4   Switch between laptop screen and external display.
+    Fn + F5   Turns the LCD backlight on/off.
+    Fn + F6   Switch the built-in speaker on/off.
+    Fn + F7   System diagnosis. 
+    Fn + F8   Switch between performance and low power consumption.
+    Fn + F9   Switch Wireless on/off.
+    Fn + F10  Switch Touchpad on/off.
+    Fn + F11  Switch Num Lock on/off.
+    Fn + F12  Switch Scroll Lock on/off.
+    Fn + ↑    Increase display brightness.
+    Fn + ↓    Decrease display brightness.
+    Fn + →    Increase built-in speaker volume.
+    Fn + ←    Decrease built-in speaker volume.
+--]]
+
 local help = {
 --    TYPE    MOD1    MOD2           KEY        TEXT
 -------------------------------------------------------------------------------
