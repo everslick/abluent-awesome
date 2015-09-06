@@ -107,12 +107,12 @@ end
  -- Tags and their default layout
 local tags = {
    names  = {
-      "sys ",     "code ",    "www ",
-      "irc ",     "term ",    "six ",
-      "seven ",   "eight ",   "nine "
+      "sys  ",    "su  ",     "www  ",
+      "irc  ",    "code ",    "I   ",
+      "II   ",    "III   ",   "IV  "
    },
    layout = {
-      layouts[1], layouts[1], layouts[1],
+      layouts[2], layouts[1], layouts[1],
       layouts[1], layouts[1], layouts[1],
       layouts[1], layouts[1], layouts[1]
    }
@@ -227,9 +227,6 @@ import("xrandr")
 import("keyhelp")
 import("debug")
 import("conky")
-
-awful.util.spawn("ln -sf " .. config_dir .. "conkyrc " ..
-                              home_dir .. ".conkyrc", false)
 
 for s = 1, screen.count() do
     console[s] = console()
@@ -1061,7 +1058,9 @@ awful.rules.rules = {
 --run_once("chromium")
 --run_once("xterm -name Float -geometry 96x39+0+29 -e su -")
 run_once("xcompmgr -FfC -I 0.045 -O 0.055")
-run_once("xterm -name Tag2")
+run_once("xterm -name Tag1 -geometry 145x19 -e dmesg -Hwu")
+run_once("xterm -name Tag1 -geometry 145x19 -e dmesg -Hwk")
+run_once("xterm -name Tag2 -e su -")
 run_once("xterm -name Tag5")
 run_once("hexchat")
 run_once("conky")
