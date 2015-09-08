@@ -63,23 +63,21 @@ local titlebar_size        = 16
 local panel_height         = 20
 local widget_notifications = false
 
--- This is used later as the default terminal and editor to run.
 local terminal       = "xterm"
 local editor         = os.getenv("EDITOR") or "vim"
+
 local editor_cmd     = terminal .. " -e " .. editor
-
 local screenlock_cmd = "xautolock -locknow"
-
 local screengrab_cmd = "scrot"
 local backlight_cmd  = "xbacklight"
 local mixer_gui_cmd  = "aumix"
 local mixer_cmd      = "amixer"
 local filer_cmd      = "rox"
 
-local iptraf_cmd     = terminal .. " -name Float -g 100x34+30+50 " ..
+local iptraf_cmd     = terminal .. " -name Float -g 100x34+30+50" ..
                                    " -e sudo iptraf-ng -i all"
 
-local xdg_menu_cmd   = "xdg_menu --format awesome --root-menu " ..
+local xdg_menu_cmd   = "xdg_menu --format awesome --root-menu   " ..
                        "/etc/xdg/menus/arch-applications.menu > " ..
                        config_dir .. "appmenu.lua"
 
@@ -122,26 +120,41 @@ for s = 1, screen.count() do
    tags[s] = awful.tag(tags.names, s, tags.layout)
 end
 
--- Automatic menu generation
-awful.util.spawn_with_shell(xdg_menu_cmd)
-local app_menu = require("appmenu")
+-- Automatic (async) menu generation
+local menu_apps = nil
+local menu_main = nil
 
 local menu_awesome = {
-    { "lock screen", lock_screen      },
+    { "lock screen", lock_screen     },
     { "restart",     awesome.restart },
     { "quit",        awesome.quit    }
 }
 
-local menu_main = awful.menu({
-    items = {
-        { "awesome", menu_awesome, beautiful.awesome_icon   },
-        { "apps",    xdgmenu or xdg_menu_command            },
-        { "xterm",   terminal .. " -name Float"             }
-    },
-    theme = {
-        width = 130
-    }
-})
+local function menu_create()
+    if awful.util.file_readable(config_dir .. "appmenu.lua") then
+        menu_timer:stop()
+        menu_timer:disconnect_signal("timeout", menu_create)
+
+        menu_apps = require("appmenu")
+
+        menu_main = awful.menu({
+            items = {
+                { "awesome", menu_awesome, beautiful.awesome_icon },
+                { "apps",    xdgmenu                              },
+                { "xterm",   terminal .. " -name Float"           }
+            },
+            theme = {
+                width = 130
+            }
+        })
+    end
+end
+
+awful.util.spawn_with_shell("rm " .. config_dir .. "appmenu.lua")
+menu_timer = timer({ timeout = 2 })
+menu_timer:connect_signal("timeout", menu_create)
+awful.util.spawn_with_shell(xdg_menu_cmd)
+menu_timer:start()
 
 -------------------------------------------------------------------------------
 -- COMMONLY USED HELPER FUNCTIONS                                            --
@@ -1056,8 +1069,6 @@ awful.rules.rules = {
 -- Screen locker
 awful.util.spawn_with_shell(config_dir .. "autolock.sh")
 
---run_once("chromium")
---run_once("xterm -name Float -geometry 96x39+0+29 -e su -")
 run_once("xcompmgr -FfC -I 0.045 -O 0.055")
 run_once("xterm -name Tag1 -title Term1 -geometry 145x19 -e dmesg -Hwu")
 run_once("xterm -name Tag1 -title Term2 -geometry 145x19 -e dmesg -Hwk")
