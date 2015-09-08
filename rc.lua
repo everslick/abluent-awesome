@@ -68,9 +68,9 @@ local terminal       = "xterm"
 local editor         = os.getenv("EDITOR") or "vim"
 local editor_cmd     = terminal .. " -e " .. editor
 
-local screenlock_cmd = "xlock -delay 40000 -nice 20 -mode matrix"
-local screengrab_cmd = "scrot"
+local screenlock_cmd = "xautolock -locknow"
 
+local screengrab_cmd = "scrot"
 local backlight_cmd  = "xbacklight"
 local mixer_gui_cmd  = "aumix"
 local mixer_cmd      = "amixer"
@@ -135,7 +135,7 @@ local menu_awesome = {
 local menu_main = awful.menu({
     items = {
         { "awesome", menu_awesome, beautiful.awesome_icon   },
-        { "apps",    xdgmenu                                },
+        { "apps",    xdgmenu or xdg_menu_command            },
         { "xterm",   terminal .. " -name Float"             }
     },
     theme = {
@@ -147,13 +147,6 @@ local menu_main = awful.menu({
 -- COMMONLY USED HELPER FUNCTIONS                                            --
 -------------------------------------------------------------------------------
 
-local function notify(title, text, time)
-    naughty.notify({
-        preset = naughty.config.presets.low,
-        title = title, text = text, timeout = time or 5
-    })
-end
-
 local function run_once(prg)
     -- we escape all '+' characters with '\'
     local cmd = string.gsub(prg, "+", "\\+")
@@ -161,13 +154,20 @@ local function run_once(prg)
     local running = os.execute("pgrep -fu $USER '" .. cmd .. "'")
 
     if not running then
-        notify("Starting:        ", prg)
+        naughty.notify({ title = "Starting: ", text = prg, timeout = 3 })
         awful.util.spawn_with_shell(prg)
     end
 end
 
 local function lock_screen()
     awful.util.spawn(screenlock_cmd, false)
+end
+
+local function notify(title, text, time)
+    naughty.notify({
+        preset = naughty.config.presets.low,
+        title = title, text = text, timeout = time or 3
+    })
 end
 
 local function grab_screen(window)
@@ -1053,12 +1053,16 @@ awful.rules.rules = {
 -- AUTOSTART APPLICATIONS                                                    --
 -------------------------------------------------------------------------------
 
+-- Screen locker
+awful.util.spawn_with_shell(config_dir .. "autolock.sh")
+
 --run_once("chromium")
 --run_once("xterm -name Float -geometry 96x39+0+29 -e su -")
 run_once("xcompmgr -FfC -I 0.045 -O 0.055")
-run_once("xterm -name Tag1 -geometry 145x19 -e dmesg -Hwu")
-run_once("xterm -name Tag1 -geometry 145x19 -e dmesg -Hwk")
-run_once("xterm -name Tag2 -e su -")
-run_once("xterm -name Tag5")
+run_once("xterm -name Tag1 -title Term1 -geometry 145x19 -e dmesg -Hwu")
+run_once("xterm -name Tag1 -title Term2 -geometry 145x19 -e dmesg -Hwk")
+run_once("xterm -name Tag2 -title Term3 -e su -")
+run_once("xterm -name Tag5 -title Term4")
+run_once("xterm -name Tag5 -title Term5")
 run_once("hexchat")
 run_once("conky")
