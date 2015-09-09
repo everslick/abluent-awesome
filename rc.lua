@@ -635,6 +635,8 @@ local clientbuttons = awful.util.table.join(
 -- GLOBAL KEYS                                                               --
 -------------------------------------------------------------------------------
 
+local focused_client = nil
+
 local globalkeys = awful.util.table.join(
     -- Function keys
     awful.key({ }, "XF86Launch1",              function() -- F5
@@ -680,10 +682,10 @@ local globalkeys = awful.util.table.join(
        awful.tag.incmwfact(-0.02)
     end),
     awful.key({ winkey, "Control" }, "Left",   function()
-       awful.tag.incnmaster( 1)
+       awful.tag.incnmaster(-1)
     end),
     awful.key({ winkey, "Control" }, "Right",  function()
-
+       awful.tag.incnmaster( 1)
     end),
 
     awful.key({ winkey, "Control" }, "l",      lock_screen               ),
@@ -701,6 +703,23 @@ local globalkeys = awful.util.table.join(
         awful.client.focus.byidx(1)
         if client.focus then
             client.focus:raise()
+        end
+    end),
+    awful.key({ altkey,           }, "Tab",   function()
+        local cls = awful.util.table.reverse(awful.client.tiled())
+
+        if #cls >= 2 then
+            local c = awful.client.getmaster()
+
+            for k, v in pairs(cls) do
+                 c:swap(v)
+            end
+
+            c = awful.mouse.client_under_pointer()
+            if not (c == nil) then
+                client.focus = c
+                c:raise()
+            end
         end
     end),
 
