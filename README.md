@@ -66,6 +66,7 @@ Win+F1 shortcut toggles the keyboard help notification.
  "Win" , ""           , "F1"    , "view keyboard help"
  "Win" , ""           , "Esc"   , "restore tag history"
  "Win" , ""           , "Tab"   , "focus next client"
+ "Alt" , ""           , "Tab"   , "cycle through tiled clients"
  "Win" , ""           , "PrtSc" , "grab window"
  ""    , ""           , "PrtSc" , "grab screen"
 
