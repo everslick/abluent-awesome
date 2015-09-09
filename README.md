@@ -29,17 +29,17 @@ Dependencies
 ------------
 
 * awesome (3.5.x)
-* lain (awesome widget library)
-* aumix (for GUI mixer)
 * scrot (for screen grabing)
 * xlock (for screensaver and locking)
+* xautolock (for screensaver and locking)
 * xdg-menu (for auto generated application menu)
 * conky (for system monitoring)
+* xterm for drop-down console
 
 Keyboard
 --------
 
-The keyboard shortcuts follow some special rational. they are
+The keyboard shortcuts follow some special rational. They are
 organized in a way so they can be performed with either one or
 two hands depending on the context. Where possible, the key
 resambles the function to make memorization easier. Anyway, the
