@@ -122,6 +122,9 @@ for s = 1, screen.count() do
    tags[s] = awful.tag(tags.names, s, tags.layout)
 end
 
+awful.tag.setmwfact(0.56, tags[1][5])
+--awful.tag.viewonly(tags[1][5])
+
 -- Automatic (async) menu generation
 local menu_apps = nil
 local menu_main = nil
@@ -718,10 +721,9 @@ local globalkeys = awful.util.table.join(
                  c:swap(v)
             end
 
-            c = awful.mouse.client_under_pointer()
-            if not (c == nil) then
-                client.focus = c
-                c:raise()
+            awful.client.focus.byidx(-1)
+            if client.focus then
+                client.focus:raise()
             end
         end
     end),
