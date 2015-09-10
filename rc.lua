@@ -72,9 +72,8 @@ local mixer_cmd      = "amixer"
 local filer_cmd      = "rox"
 
 local update_cmd     = terminal .. " -name Float -g 80x20+30+50 -e '" ..
-                                   " sudo pacman --noconfirm -Syu &&" ..
-                                   " sudo pacman --noconfirm -Sc ;"   ..
-                                   " sleep 3'"
+                                   " sudo pacman -Syu && sudo pacman" ..
+                                   " --noconfirm -Sc ; sleep 3'"
 
 local iptraf_cmd     = terminal .. " -name Float -g 100x34+30+50 -e '" ..
                                    " sudo iptraf-ng -i all'"
