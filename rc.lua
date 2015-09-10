@@ -64,9 +64,6 @@ local panel_height         = 20
 local widget_notifications = false
 
 local terminal       = "xterm"
-local editor         = os.getenv("EDITOR") or "vim"
-
-local editor_cmd     = terminal .. " -e " .. editor
 local screenlock_cmd = "xautolock -locknow"
 local screengrab_cmd = "scrot"
 local backlight_cmd  = "xbacklight"
@@ -74,8 +71,13 @@ local mixer_gui_cmd  = "aumix"
 local mixer_cmd      = "amixer"
 local filer_cmd      = "rox"
 
-local iptraf_cmd     = terminal .. " -name Float -g 100x34+30+50" ..
-                                   " -e sudo iptraf-ng -i all"
+local update_cmd     = terminal .. " -name Float -g 80x20+30+50 -e '" ..
+                                   " sudo pacman --noconfirm -Syu &&" ..
+                                   " sudo pacman --noconfirm -Sc ;"   ..
+                                   " sleep 3'"
+
+local iptraf_cmd     = terminal .. " -name Float -g 100x34+30+50 -e '" ..
+                                   " sudo iptraf-ng -i all'"
 
 local xdg_menu_cmd   = "xdg_menu --format awesome --root-menu   " ..
                        "/etc/xdg/menus/arch-applications.menu > " ..
@@ -141,6 +143,7 @@ local function menu_create()
             items = {
                 { "awesome", menu_awesome, beautiful.awesome_icon },
                 { "apps",    xdgmenu                              },
+                { "update",  update_cmd                           },
                 { "xterm",   terminal .. " -name Float"           }
             },
             theme = {
@@ -763,6 +766,9 @@ local globalkeys = awful.util.table.join(
         local s = mouse.screen
 
         awesome_panel[s].visible = not awesome_panel[s].visible
+    end),
+    awful.key({ winkey,           }, "i",      function()
+        dbg(mouse.object_under_pointer())
     end)
 )
 
@@ -771,10 +777,6 @@ local globalkeys = awful.util.table.join(
 -------------------------------------------------------------------------------
 
 local clientkeys = awful.util.table.join(
-    awful.key({ winkey,           }, "i",      function(c)
-        dbg(c)
-    end),
-
     awful.key({ winkey,           }, "t",      function(c)
         if titlebar_enabled then
             awful.titlebar.toggle(c)
@@ -1089,10 +1091,11 @@ awful.rules.rules = {
 awful.util.spawn_with_shell(config_dir .. "autolock.sh")
 
 run_once("xcompmgr -FfC -I 0.045 -O 0.055")
-run_once("xterm -name Tag1 -title Term1 -geometry 145x19 -e dmesg -Hwu")
-run_once("xterm -name Tag1 -title Term2 -geometry 145x19 -e dmesg -Hwk")
+run_once("xterm -name Tag1 -title Term1 -g 145x19 -e dmesg -Hwu")
+run_once("xterm -name Tag1 -title Term2 -g 145x19 -e dmesg -Hwk")
 run_once("xterm -name Tag2 -title Term3 -e su -")
 run_once("xterm -name Tag5 -title Term4")
 run_once("xterm -name Tag5 -title Term5")
+run_once("xterm -name Tag5 -title Term6")
 run_once("hexchat")
 run_once("conky")

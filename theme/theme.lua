@@ -15,13 +15,13 @@ theme.font          = "sans 8"
 
 theme.bg_normal     = "#101040d0"
 theme.bg_focus      = "#101080d0"
-theme.bg_urgent     = "#601080d0"
+theme.bg_urgent     = "#901080d0"
 theme.bg_minimize   = "#404040d0"
 theme.bg_systray    = theme.bg_normal
 
 theme.fg_normal     = "#a8a8d8"
 theme.fg_focus      = "#ffffff"
-theme.fg_urgent     = "#d8a8a8"
+theme.fg_urgent     = "#ffa8a8"
 theme.fg_minimize   = theme.fg_focus
 
 theme.border_width  = 1
