@@ -721,13 +721,14 @@ local globalkeys = awful.util.table.join(
                  c:swap(v)
             end
 
-            local sel = c or capi.client.focus
+            local f = client.focus
 
             for idx, c in ipairs(cls) do
-                if c == sel then
-                    c = cls[awful.util.cycle(#cls, idx - 1)]
+                if c == f then
+                    c = cls[awful.util.cycle(#cls, idx + 1)]
                     client.focus = c
                     c:raise()
+                    break
                 end
             end
         end
