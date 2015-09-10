@@ -102,6 +102,7 @@ Win+F1 shortcut toggles the keyboard help notification.
 
 ToDo
 ----
+
 * merge conky and console modules
 * test on more then one screen (xrandr)
 * nicer icons
@@ -109,5 +110,6 @@ ToDo
 
 Screenshots
 -----------
+
 ![Screenshot 1](./doc/screenshot_1.png?raw=true "Screenshot 1: xterm + keyboard help")
 ![Screenshot 2](./doc/screenshot_2.jpg?raw=true "Screenshot 2: audacious + conky")
