@@ -28,6 +28,14 @@ local function conky_init()
 
     c:geometry({ x = 1024 })
 
+    --c.floating = true
+    --c.opacity = 0.85
+    --c.ontop = true
+    --c.above = true
+    --c.sticky = true
+    --c.skip_taskbar = true
+    --c.border_width = 0
+                                
     -- This is not a normal window, don't apply any specific keyboard stuff
     c:buttons({})
     c:keys({})

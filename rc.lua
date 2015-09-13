@@ -87,8 +87,8 @@ local winkey = "Mod4"
 local altkey = "Mod1"
 
 naughty.config.presets.low.opacity      = 0.85
-naughty.config.presets.normal.opacity   = 0.85
-naughty.config.presets.critical.opacity = 0.85
+naughty.config.presets.normal.opacity   = 0.90
+naughty.config.presets.critical.opacity = 0.95
 
 -- Table of layouts to cover with awful.layout.inc, order matters
 local layouts = {
@@ -167,7 +167,7 @@ menu_timer:start()
 
 local function run_once(prg)
     -- we escape all '+' characters with '\'
-    local cmd = string.gsub(prg, "+", "\\+")
+    local cmd = string.gsub(prg, "+", "\\+") -- what about '?'. '-' and '*' ?
     -- otherwise pgrep will not find the process
     local running = os.execute("pgrep -fu $USER '" .. cmd .. "'")
 
@@ -198,14 +198,15 @@ local function grab_screen(window)
     notify("Saving screenshot to file:", filename)
 end
 
-local function menu_client_show()
-    if client_menu_instance then
-        client_menu_instance:hide()
-        client_menu_instance = nil
+local menu_client_instance = nil
+local function menu_client_toggle()
+    if menu_client_instance and menu_client_instance.wibox.visible then
+        menu_client_instance:hide()
+        menu_client_instance = nil
     else
-        client_menu_instance = awful.menu.clients({ theme = { width = 240 } })
+        menu_client_instance = awful.menu.clients({ theme = { width = 240 } })
     end
-end 
+end
 
 local function move_client_to_previous_tag(switch)
     local curidx = awful.tag.getidx()
@@ -257,8 +258,8 @@ end
 -- Create awesome icon and use it as menu launcher
 local btn_widget = wibox.widget.imagebox(beautiful.awesome_icon)
 btn_widget:buttons(awful.util.table.join(
-    awful.button({ }, 1, function() menu_main:toggle() end),
-    awful.button({ }, 3, function() menu_client_show() end)
+    awful.button({ }, 1, function() menu_main:toggle()   end),
+    awful.button({ }, 3, function() menu_client_toggle() end)
 ))
 
 -- Create a textclock widget and attach a calendar
@@ -621,8 +622,8 @@ end
 
 -- On the desktop
 root.buttons(awful.util.table.join(
-    awful.button({ }, 1, function() menu_main:toggle() end),
-    awful.button({ }, 3, function() menu_client_show() end),
+    awful.button({ }, 1, function() menu_main:toggle()   end),
+    awful.button({ }, 3, function() menu_client_toggle() end),
     awful.button({ }, 4, awful.tag.viewnext),
     awful.button({ }, 5, awful.tag.viewprev)
 ))
@@ -762,7 +763,7 @@ local globalkeys = awful.util.table.join(
 
     -- Menus
     awful.key({ altkey            }, "`",      function()
-        menu_client_show()
+        menu_client_toggle()
     end),
     awful.key({ winkey            }, "`",      function()
         menu_main:toggle()
@@ -894,6 +895,10 @@ root.keys(globalkeys)
 -------------------------------------------------------------------------------
 -- SIGNALS                                                                   --
 -------------------------------------------------------------------------------
+
+awesome.connect_signal("exit", function()
+    awful.util.spawn_with_shell("killall xcompmgr")
+end)
 
 client.disconnect_signal("request::activate", awful.ewmh.activate)
 function awful.ewmh.activate(c)
@@ -1035,7 +1040,7 @@ awful.rules.rules = {
                      keys = clientkeys,
                      buttons = clientbuttons } },
     -- Launch certein programs as floating
-    { rule = { name = "Page Unresponsive" }, -- this is for Chromium
+    { rule = { type = "dialog" },
       properties = { floating = true  } },
     { rule = { class = "conky" },
       properties = { floating = true,
