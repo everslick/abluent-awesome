@@ -198,13 +198,16 @@ local function grab_screen(window)
     notify("Saving screenshot to file:", filename)
 end
 
-local menu_client_instance = nil
-local function menu_client_toggle()
-    if menu_client_instance and menu_client_instance.wibox.visible then
-        menu_client_instance:hide()
-        menu_client_instance = nil
-    else
-        menu_client_instance = awful.menu.clients({ theme = { width = 240 } })
+local function menu_client_toggle_fn()
+    local instance = nil
+
+    return function()
+        if instance and instance.wibox.visible then
+            instance:hide()
+            instance = nil
+        else
+            instance = awful.menu.clients({ theme = { width = 240 } })
+        end
     end
 end
 
@@ -258,8 +261,8 @@ end
 -- Create awesome icon and use it as menu launcher
 local btn_widget = wibox.widget.imagebox(beautiful.awesome_icon)
 btn_widget:buttons(awful.util.table.join(
-    awful.button({ }, 1, function() menu_main:toggle()   end),
-    awful.button({ }, 3, function() menu_client_toggle() end)
+    awful.button({ }, 1, function() menu_main:toggle() end),
+    awful.button({ }, 3, menu_client_toggle_fn())
 ))
 
 -- Create a textclock widget and attach a calendar
@@ -622,8 +625,8 @@ end
 
 -- On the desktop
 root.buttons(awful.util.table.join(
-    awful.button({ }, 1, function() menu_main:toggle()   end),
-    awful.button({ }, 3, function() menu_client_toggle() end),
+    awful.button({ }, 1, function() menu_main:toggle() end),
+    awful.button({ }, 3, menu_client_toggle_fn()),
     awful.button({ }, 4, awful.tag.viewnext),
     awful.button({ }, 5, awful.tag.viewprev)
 ))
@@ -762,9 +765,7 @@ local globalkeys = awful.util.table.join(
     end),
 
     -- Menus
-    awful.key({ altkey            }, "`",      function()
-        menu_client_toggle()
-    end),
+    awful.key({ altkey            }, "`",      menu_client_toggle_fn()),
     awful.key({ winkey            }, "`",      function()
         menu_main:toggle()
     end),
