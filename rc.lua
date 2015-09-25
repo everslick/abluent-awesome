@@ -898,7 +898,8 @@ root.keys(globalkeys)
 -------------------------------------------------------------------------------
 
 awesome.connect_signal("exit", function()
-    awful.util.spawn_with_shell("killall xcompmgr")
+    awful.util.spawn("killall xcompmgr")
+    awful.util.spawn("killall -9 conky")
 end)
 
 client.disconnect_signal("request::activate", awful.ewmh.activate)
@@ -1050,6 +1051,8 @@ awful.rules.rules = {
                      above = true,
                      sticky = true,
                      skip_taskbar = true } },
+    { rule = { name = "Page Unresponsive" }, -- for chromium
+      properties = { floating = true  } },
     { rule = { class = "ROX-Filer" },
       properties = { floating = true  } },
     { rule = { class = "mpv" },
