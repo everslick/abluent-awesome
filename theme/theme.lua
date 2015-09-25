@@ -15,7 +15,7 @@ theme.font          = "sans 8"
 
 theme.bg_normal     = "#101040d0"
 theme.bg_focus      = "#101080d0"
-theme.bg_urgent     = "#c01010d0"
+theme.bg_urgent     = "#f01010d0"
 theme.bg_minimize   = "#404040d0"
 theme.bg_systray    = theme.bg_normal
 
