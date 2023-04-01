@@ -9,6 +9,7 @@ SRC=`pwd`
 
 echo
 echo "Installing Awesome config..."
+mkdir -p ~/.config/
 cd ~/.config/
 if [ "$1" != "--no-backup" ] && [ -e awesome ] ; then
     echo "  renamimg original awesome directory to awesome.$BAK"

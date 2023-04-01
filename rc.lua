@@ -6,18 +6,21 @@
 --
 
 -- Standard awesome library
-local gears       = require("gears")
-local awful       = require("awful")
-      awful.rules = require("awful.rules")
-                    require("awful.autofocus")
+local gears        = require("gears")
+local awful        = require("awful")
+      awful.rules  = require("awful.rules")
+                     require("awful.autofocus")
 -- Widget and layout library
-local wibox       = require("wibox")
+local wibox        = require("wibox")
 -- Theme handling library
-local beautiful   = require("beautiful")
+local beautiful    = require("beautiful")
 -- Notification library
-local naughty     = require("naughty")
+local naughty      = require("naughty")
 -- Widget helper library
-local lain        = require("lain")
+local lain         = require("lain")
+
+-- Quake console library
+local console      = require("console")
 
 -------------------------------------------------------------------------------
 -- STANDARD ERROR HANDLING                                                   --
@@ -243,16 +246,11 @@ end
 
 require("loader")
 
-import("console")
 import("icons")
 import("xrandr")
 import("keyhelp")
 import("debug")
 import("conky")
-
-for s = 1, screen.count() do
-    console[s] = console()
-end
 
 -------------------------------------------------------------------------------
 -- PANEL (WIBOX) PREPARATION                                                 --
@@ -511,6 +509,9 @@ local prompt_box = {}
 local layout_box = {}
 local tag_widget = {}
 
+local quake = {}
+local screens = {}
+
 -- Space and seperator widgets for the panel
 local spc_widget = wibox.widget.textbox()
 spc_widget:set_text("   ")
@@ -617,6 +618,11 @@ for s = 1, screen.count() do
     layout:set_right(right_layout)
 
     awesome_panel[s]:set_widget(layout)
+
+    -- create a drop down (quake) console on each screen as well
+    quake[s] = console()
+
+    screens[screen[s]] = s
 end
 
 -------------------------------------------------------------------------------
@@ -749,17 +755,19 @@ local globalkeys = awful.util.table.join(
     awful.key({ altkey            }, "F1",     keyhelp_toggle ),
     awful.key({ winkey            }, "F2",     conky_toggle   ),
     awful.key({ altkey            }, "F2",     conky_toggle   ),
+
+    -- Quake
     awful.key({ altkey            }, "Escape", function()
-        console[mouse.screen]:toggle()
+        quake[screens[screen[mouse.screen]]]:toggle()
     end),
 
     -- Prompt
     awful.key({ winkey            }, "r",      function()
-        prompt_box[mouse.screen]:run()
+        prompt_box[screens[screen[mouse.screen]]]:run()
     end),
     awful.key({ winkey            }, "x",      function()
         awful.prompt.run({ prompt = "Lua: " },
-        prompt_box[mouse.screen].widget,
+        prompt_box[screens[screen[mouse.screen]]].widget,
         awful.util.eval, nil,
         cache_dir .. "history_eval")
     end),
@@ -772,7 +780,7 @@ local globalkeys = awful.util.table.join(
 
     -- Toggle awesome wibox (panel)
     awful.key({ winkey,           }, "c",      function()
-        local s = mouse.screen
+        local s = screens[screen[mouse.screen]]
 
         awesome_panel[s].visible = not awesome_panel[s].visible
     end),
@@ -849,9 +857,7 @@ for i = 1, 9 do
     globalkeys = awful.util.table.join(globalkeys,
         -- View this tag only
         awful.key({ winkey }, "#" .. i + 9, function()
-            local s = mouse.screen
-
-            local tag = awful.tag.gettags(s)[i]
+            local tag = awful.tag.gettags(mouse.screen)[i]
 
             if tag then
                 awful.tag.viewonly(tag)
@@ -859,9 +865,7 @@ for i = 1, 9 do
         end),
         -- Toggle tag
         awful.key({ winkey, "Control" }, "#" .. i + 9, function()
-            local s = mouse.screen
-
-            local tag = awful.tag.gettags(s)[i]
+            local tag = awful.tag.gettags(mouse.screen)[i]
 
             if tag then
                 awful.tag.viewtoggle(tag)

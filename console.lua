@@ -135,7 +135,7 @@ function Console:new()
 
     -- The application to be invoked is:
     config.terminal = config.terminal or "xterm"
-    config.name     = config.name     or "DropDownConsole"
+    config.name     = config.name     or "quake"
     config.cmd      = config.cmd      or "-e fish"
 
     -- If width or height <= 1 this is a proportion of the workspace
